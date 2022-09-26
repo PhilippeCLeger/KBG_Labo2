@@ -9,7 +9,7 @@
 
 const fs = require('fs');
 const utilities = require('../utilities.js');
-
+const {buildListSorter} = require('./listsorter');
 
 class Repository {
     constructor(model) {
@@ -127,7 +127,10 @@ class Repository {
             objectsList = this.bindExtraData(objectsList);
         }
         if (params) {
-            // TODO Laboratoire 2
+            let filterParams = Object.entries(params).filter(([key, value]) => key!='sort');
+            objectsList = utilities.filterObjects(objectsList, filterParams)
+            let sorter = buildListSorter(params['sort']);
+            if(sorter) objectsList.sort((o0, o1) => sorter.compare(o0, o1))
         }
         return objectsList;
     }

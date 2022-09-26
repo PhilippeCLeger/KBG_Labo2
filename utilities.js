@@ -91,3 +91,33 @@ exports.decomposePath = (url) => {
     }
     return { isAPI, model, controllerName, action, id, queryString, params };
 }
+
+
+module.exports.compareNum = function compareNum(x, y){ 
+	if (x === y) return 0; 
+  else if (x < y) return -1; 
+  return 1; 
+} 
+
+module.exports.innerCompare = function innerCompare(x, y){ 
+	if ((typeof x) === 'string') 
+  return x.localeCompare(y); 
+  else return module.exports.compareNum(x, y); 
+}
+
+module.exports.valueMatch = function valueMatch(value, searchValue) {
+    try {
+        return new RegExp('^' + searchValue.toLowerCase().replace(/\*/g, '.*') + '$').test(value.toString().toLowerCase());
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+module.exports.filterObjects = function filterObjects(lst, filterParams){
+    return lst.filter((o) => {
+        return filterParams.filter(([pName, pValue]) =>{
+            return !exports.valueMatch(o[pName], pValue);
+        }).length == 0;
+    });
+}
